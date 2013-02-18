@@ -13,6 +13,8 @@ class UsersController < ApplicationController
       flash[:success] = "Welcome to the Sample App!"
       redirect_to @user
     else
+      ## flash is a local variable. After render view, create method calls 'new' and finishes.
+      flash[:error] = "Please read error messages, fill in form and resubmit."
       render 'new'
     end
   end
