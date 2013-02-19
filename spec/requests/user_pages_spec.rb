@@ -71,6 +71,7 @@ describe "User Pages" do
         
         it { should have_selector('title', text: user.name) }
         it { should have_selector('div.alert.alert-success', text: 'Welcome') } ## text: 'string' is a match, not a precise comparison.
+        it { should have_link('Sign out') }
       end
       
       
