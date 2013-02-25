@@ -29,6 +29,15 @@ describe User do
   
   it { should be_valid }
   
+  describe "un-accessible attributes" do
+    it "should not allow access to admin" do
+      expect do
+        User.new(admin: true)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+  end
+  
+  
   describe "when name is not present" do
     before {@user.name = "" }
     it { should_not be_valid }
