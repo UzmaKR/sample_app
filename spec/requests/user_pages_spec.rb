@@ -84,7 +84,7 @@ describe "User Pages" do
           fill_in "Name",     with: "abcd efgh"
           fill_in "Email",    with: "ae@invalidemail"
           fill_in "Password", with: "foo"
-          fill_in "Confirmation", with: "foobaz"
+          fill_in "Confirm Password", with: "foobaz"
           click_button submit
         end
         
@@ -108,7 +108,7 @@ describe "User Pages" do
         fill_in "Name",         with: "Example User"
         fill_in "Email",        with: "user@example.com"
         fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
+        fill_in "Confirm Password", with: "foobar"
       end
       
       it "should create a user" do

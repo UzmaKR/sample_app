@@ -40,6 +40,8 @@ describe "Authentication" do
       describe "followed by signout" do
         before { click_link "Sign out" }
         it { should have_link('Sign In') }
+        it { should_not have_link('Profile', href: user_path(user)) }
+        it { should_not have_link('Settings', href: edit_user_path(user)) }
       end
     end
   end
@@ -63,6 +65,21 @@ describe "Authentication" do
             page.should have_selector('title', text: 'Edit user')
           end
         end
+        
+        describe " then log out and sign in again" do
+          
+          before do
+            delete signout_path
+            visit signin_path
+            fill_in "Email",  with: user.email
+            fill_in "Password",   with: user.password
+            click_button "Sign In"
+          end
+          it "should render the profile page" do 
+            page.should have_selector('title', text: user.name) 
+          end
+        end
+        
       end
       
       describe "in the Users controller" do
@@ -81,10 +98,25 @@ describe "Authentication" do
           before { visit users_path }
           it { should have_selector('title', text: 'Sign In') }
         end
-        
       end
-      
     end
+    
+    describe "for signed-in users" do
+      let(:user)  { FactoryGirl.create(:user) }
+      
+      before { sign_in user }
+      
+      describe "should not be able to access the 'new' page" do
+          before { get new_user_path }
+          specify { response.should redirect_to(root_path) }
+      end
+          
+      describe "should not be able to access the 'create' page" do
+          before { post users_path }
+          specify { response.should redirect_to(root_path) }
+      end
+    end
+    
     
     describe "as wrong user" do
       let(:user) { FactoryGirl.create(:user) }
@@ -113,6 +145,22 @@ describe "Authentication" do
         specify { response.should redirect_to(root_path) }
       end 
     end
+    
+    describe "as admin user" do
+      let(:admin)  { FactoryGirl.create(:admin) }
+      
+      before do
+          sign_in admin
+          visit users_path
+      end
+      
+      describe "submitting a DELETE request to the Users#destroy action" do
+        before  { delete user_path(admin) }
+        specify  { response.should redirect_to(users_path) }
+      end
+      
+    end
+    
   end
   
 end
